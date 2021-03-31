@@ -1,11 +1,16 @@
 from iota import Iota
 from iota import Tag 
 
-api = Iota('https://nodes.devnet.iota.org:443', testnet = True)
-tag= ['NMSGHUHKOFCJSPCKBBDGQDJPRPWTGT9YCXDVBMUXTGSQAIZLAHSVNNOHEDQRXANVMLS9PWKPJVLCYYBNXYITYTJKJD']
+print ("Connexion to the iota devnet...")
 
-transactions = api.find_transaction_objects(addresses=tag)
-print(transactions)
+api = Iota('https://nodes.devnet.iota.org:443', testnet = True)
+
+print( "Get all the transaction from the concessionaire address..")
+
+address= ['NMSGHUHKOFCJSPCKBBDGQDJPRPWTGT9YCXDVBMUXTGSQAIZLAHSVNNOHEDQRXANVMLS9PWKPJVLCYYBNXYITYTJKJD']
+
+transactions = api.find_transaction_objects(addresses=address)
+
 for transaction in transactions['transactions']:
   # Ignore input transactions; these have cryptographic signatures,
   # not human-readable messages.
