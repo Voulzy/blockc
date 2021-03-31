@@ -15,7 +15,7 @@ tx = ProposedTransaction(
 address=Address(address),
 value = 10,
 tag=Tag(b'AA'),
-message=TryteString.from_unicode('km?100?')
+message=TryteString.from_unicode('wrong?100?')
 ) 
 result = api.send_transfer(transfers=[tx] )
 print('Bundle: ')
