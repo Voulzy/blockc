@@ -13,15 +13,9 @@ addy = Address(b'ZLGVEQ9JUZZWCZXLWVNTHBDX9G9KZTJP9PREEIIFHY9SIQKYBVAHIMLHXPQVE9I
 print('Fetching data from the Tangle...')
 # Fetch the transaction objects of the address from the Tangle
 response = api.find_transaction_objects(addresses=[addy])
-if not response['transactions']:
-	    print("y'a R")
-	else:
-		for tx in response['transactions']:
-			print(tx.timestamp)
-			print(tx.de)
 def getInfo(tag,info):
 	if not response['transactions']:
-	    print("y'a R")
+	    return "Null"
 	else:
 	    for tx in response['transactions']:
 	    	if tx.tag==tag+""+info:

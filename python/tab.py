@@ -1,23 +1,64 @@
 from tkinter import *
+from tkinter import ttk
+import matplotlib.pyplot as plt
+
 
 
 root=Tk()
-
 root.geometry("1080x720")
 
-VID=Label(root,width=10,text="VID")
-VID.grid(row=0,column=2,padx=20)
+tCR={"Parfait état":"2021-03-15"}
+tKM={"1200":"2021-03-15"}
+tCons={"10":"2021-03-15"}
 
-CR=Label(root,width=10,text="CR")
-CR.grid(row=0,column=3,padx=20)
 
-KM=Label(root,width=10,text="KM")
-KM.grid(row=0,column=4,padx=20)
+treeCR=ttk.Treeview(root)
+treeKM=ttk.Treeview(root)
+treeCons=ttk.Treeview(root)
 
-Cons=Label(root,width=10,text="Cons")
-Cons.grid(row=0,column=5,padx=20)
+treeCons['columns'] = ("Cons","Date")
+treeCR['columns'] = ("CR","Date")
+treeKM['columns'] = ("KM","Date")
 
-TS=Label(root,width=10,text="Timestamp")
-TS.grid(row=0,column=1,padx=20)
+def setTable(dictio,table):
+	count=0
+	for cle,valeur in dictio.items():
+		table.insert(parent='',index='end',iid=count,values=(cle,valeur))
+		count +=1
+
+
+treeCR.column("#0",width=0,stretch=NO)
+treeCR.column("CR",anchor=W,width=120)
+treeCR.column("Date",anchor=CENTER,width=120)
+
+treeCons.column("#0",width=0,stretch=NO)
+treeCons.column("Cons",anchor=W,width=120)
+treeCons.column("Date",anchor=CENTER,width=120)
+
+treeKM.column("#0",width=0,stretch=NO)
+treeKM.column("KM",anchor=W,width=120)
+treeKM.column("Date",anchor=CENTER,width=120)
+
+treeCR.heading("#0",text="Label",anchor=W)
+treeCR.heading("CR",text="État courroie",anchor=W)
+treeCR.heading("Date",text="Date",anchor=CENTER)
+
+treeKM.heading("#0",text="Label",anchor=W)
+treeKM.heading("KM",text="KM",anchor=W)
+treeKM.heading("Date",text="Date",anchor=CENTER)
+
+treeCons.heading("#0",text="Label",anchor=W)
+treeCons.heading("Cons",text="L/100",anchor=W)
+treeCons.heading("Date",text="Date",anchor=CENTER)
+
+setTable(tCR,treeCR)
+setTable(tKM,treeKM)
+setTable(tCons,treeCons)
+
+treeCR.pack()
+treeCons.pack()
+treeKM.pack()
+
+
 
 root.mainloop()
