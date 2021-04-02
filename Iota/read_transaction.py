@@ -5,9 +5,10 @@ from rsa_signature import *
 
 
 #####definition des variables a récuperer####
-km=[]
-conso=[]
-usure=[]
+km={}
+conso={}
+usure={}
+response = {}
 
 ########### Fin definition variable
 
@@ -43,51 +44,59 @@ def get_verify_IOTA(message,public_key):
 
 
 
+def get_dicts(UID):
+	print ("Connexion to the iota devnet...")
 
-print ("Connexion to the iota devnet...")
+	api = Iota('https://nodes.devnet.iota.org:443', testnet = True)
 
-api = Iota('https://nodes.devnet.iota.org:443', testnet = True)
+	###### A utiliser pour saisi manuel de l'uid
 
-###### A utiliser pour saisi manuel de l'uid
+	#input=input("Quel est l'UID de la voiture ?")
+	#print("UID saisi : ",input) 
 
-#input=input("Quel est l'UID de la voiture ?")
-#print("UID saisi : ",input) 
+	#####
+	pub_jey=import_public_key()
+	print( "Get all the transaction from the concessionaire address..")
+	address= ['NMSGHUHKOFCJSPCKBBDGQDJPRPWTGT9YCXDVBMUXTGSQAIZLAHSVNNOHEDQRXANVMLS9PWKPJVLCYYBNXYITYTJKJD']
 
-#####
-pub_jey=import_public_key()
-print( "Get all the transaction from the concessionaire address..")
-address= ['NMSGHUHKOFCJSPCKBBDGQDJPRPWTGT9YCXDVBMUXTGSQAIZLAHSVNNOHEDQRXANVMLS9PWKPJVLCYYBNXYITYTJKJD']
+	## get all transaction done to the adress
+	transactions = api.find_transaction_objects(addresses=address)
+	#UID='AA9999999999999999999999999'
+	print("Parcours des transaction")
+	for transaction in transactions['transactions']:
+	  # Ignore input transactions; these have cryptographic signatures,
+	  # not human-readable messages.
+		if transaction.value < 0:
+			continue
 
-## get all transaction done to the adress
-transactions = api.find_transaction_objects(addresses=address)
-UID='AA9999999999999999999999999'
-print("Parcours des transaction")
-for transaction in transactions['transactions']:
-  # Ignore input transactions; these have cryptographic signatures,
-  # not human-readable messages.
-	if transaction.value < 0:
-		continue
-
-	print(f'Hash : {transaction.hash}:')
-	message = transaction.signature_message_fragment
-	Tag_t=transaction.tag
-	### Only this transaction hash is OK for this example
-	if(transaction.hash!='WHFVZWXIT9WCYOV9ZUYSHTFJIVPFFJCYKHZSGG9HCWQHJYPONVGPGHNHCIGMVMVE9F9JIHJBAXYEZX999'):
-		continue
-	if message is None:
-		print('(None)')
-	else :
-		if Tag_t==UID :
-			code=message.decode().split('?')[0]
-			if code=='km' :
-				km.append(get_value(message))
-				get_verify_IOTA(message,pub_jey)
-			elif code=='conso' :
-				conso.append(get_value(message))
-			elif code=='usure' :
-				usure.append(get_value(message))
+		print(f'Hash : {transaction.hash}:')
+		message = transaction.signature_message_fragment
+		date = transaction.timestamp
+		print(date)
+		Tag_t=transaction.tag
+		### Only this transaction hash is OK for this example
+		if(transaction.hash!='WHFVZWXIT9WCYOV9ZUYSHTFJIVPFFJCYKHZSGG9HCWQHJYPONVGPGHNHCIGMVMVE9F9JIHJBAXYEZX999'):
+			continue
+		if message is None:
+			print('(None)')
+		else :
+			if Tag_t==UID :
+				code=message.decode().split('?')[0]
+				if code=='km' :
+					km[get_value(message)] = transaction.timestamp
+					#get_verify_IOTA(message,pub_jey)
+				elif code=='conso' :
+					conso[get_value(message)] = transaction.timestamp
+				elif code=='usure' :
+					usure[get_value(message)] = transaction.timestamp
+				else:
+					print('Code introuvable')
 			else:
-				print("Mauvais code")
+				return "error"
+	response["km"] = km
+	response["conso"] = conso
+	response["usure"] = usure
+	return response
 
 
 
