@@ -9,7 +9,7 @@ seed = 'ESCIWUILOX9CCHPGMQUMDDGHFZZPFNYZCDYHMVYIDPOVSSHGWROCDIAVQNKPTOTCBPEIIQNU
 #connexion to the devnet, from the seed 
 api = Iota('https://nodes.devnet.iota.org:443', seed, testnet = True)
 
-address = 'NMSGHUHKOFCJSPCKBBDGQDJPRPWTGT9YCXDVBMUXTGSQAIZLAHSVNNOHEDQRXANVMLS9PWKPJVLCYYBNX'
+address = 'XJWGTWXL9JBKRGXONOXCIFLALYGAHFQKKSPFADNMJLDOZYNDWCPVUWJCK9OYBUNYNWVHQDKOHVDZE9PTD'
 private_key=import_private_key()
 data='km?150?'.encode("utf-8")
 signature=sign(private_key,SHA256.new(data))
