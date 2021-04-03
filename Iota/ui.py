@@ -69,7 +69,7 @@ class Frames(object):
 
 	def setTable(self,dictio,table):
 		count=0
-		for cle,valeur in dictio.items():
+		for valeur,cle in dictio.items():
 			table.insert(parent='',index='end',iid=count,values=(cle,datetime.utcfromtimestamp(valeur).strftime('%Y-%m-%d %H:%M:%S')))   #Timestamp value is returned in seconds so need to be parsed
 			count +=1
 

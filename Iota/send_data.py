@@ -11,17 +11,21 @@ api = Iota('https://nodes.devnet.iota.org:443', seed, testnet = True)
 
 address = 'XJWGTWXL9JBKRGXONOXCIFLALYGAHFQKKSPFADNMJLDOZYNDWCPVUWJCK9OYBUNYNWVHQDKOHVDZE9PTD'
 private_key=import_private_key()
-data='km?150?'.encode("utf-8")
+
+input_data=input("Quel est votre data a envoyé ?")
+input_tag=input("Quel est votre tag de voiture ?") 
+
+data=input_data.encode("utf-8")
 signature=sign(private_key,SHA256.new(data))
 print(signature)
 signature_trytes=TryteString.from_bytes(signature)
-message=TryteString.from_unicode('km?150?')
+message=TryteString.from_unicode(input_data)
 end=TryteString.from_unicode('?')
 message=message+signature_trytes+end
 tx = ProposedTransaction(
 address=Address(address),
 value = 10,
-tag=Tag(b'AA'),
+tag=Tag(input_tag),
 message=message
 ) 
 result = api.send_transfer(transfers=[tx] )
