@@ -31,6 +31,7 @@ def get_verify_IOTA(message,public_key):
 	data=SHA256.new(data)
 	print(verify(public_key,data,signature))
 	print("Signature OK")
+	return 1
 
 
 
@@ -39,16 +40,13 @@ def get_verify_IOTA(message,public_key):
 
 def get_dicts(UID):
 	print ("Connexion to the iota devnet...")
-
+	##for the return 
+	find=0
 	api = Iota('https://nodes.devnet.iota.org:443', testnet = True)
 
-	###### A utiliser pour saisi manuel de l'uid
-
-	#input=input("Quel est l'UID de la voiture ?")
-	#print("UID saisi : ",input) 
-
-	#####
+	#Import public key for authentification
 	pub_jey=import_public_key()
+
 	print( "Get all the transaction from the concessionaire address..")
 	address= ['XJWGTWXL9JBKRGXONOXCIFLALYGAHFQKKSPFADNMJLDOZYNDWCPVUWJCK9OYBUNYNWVHQDKOHVDZE9PTD']
 
@@ -64,24 +62,26 @@ def get_dicts(UID):
 		message = transaction.signature_message_fragment
 		date = transaction.timestamp
 		Tag_t=transaction.tag
-		### Only this transaction hash is OK for this example
+
 		
 		if message is None:
 			print('(None)')
 		else :
-			if Tag_t==UID :
+			if Tag_t[0:2]==UID :
 				code=message.decode().split('?')[0]
 				if code=='km' :
 					km[transaction.timestamp] = get_value(message)
-					get_verify_IOTA(message,pub_jey)
+					find = get_verify_IOTA(message,pub_jey)
 				elif code=='conso' :
-					conso[get_value(message)] = transaction.timestamp
+					conso[transaction.timestamp] = get_value(message)
+					find = get_verify_IOTA(message,pub_jey)
 				elif code=='usure' :
-					usure[get_value(message)] = transaction.timestamp
+					usure[transaction.timestamp] = get_value(message)
+					find = get_verify_IOTA(message,pub_jey)
 				else:
 					print('Code introuvable')
-			else:
-				return "error"
+	if find == 0 :
+		return "error"
 	response["km"] = km
 	response["conso"] = conso
 	response["usure"] = usure
