@@ -4,6 +4,7 @@ from tkinter import *
 from tkinter import messagebox
 from datetime import datetime
 import read_transaction
+import showdb
 
 
 
@@ -25,7 +26,7 @@ class Frames(object):
 		self.button.pack()
 
 	def get_info(self):
-		self.response = read_transaction.get_dicts(self.query.get())
+		self.response = read_transaction.get_dicts(showdb.get_uid(self.query.get()))
 		if self.response == "error":
 			messagebox.showinfo("Erreur", "Code introuvable")
 		else:
