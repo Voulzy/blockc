@@ -40,6 +40,10 @@ def get_verify_IOTA(message,public_key):
 
 
 
+def import_file(file):
+	with open(file,mode='rb') as file_r:
+        	content=file_r.read()
+        	return content
 
 
 
@@ -53,7 +57,9 @@ def get_dicts(UID):
 	pub_jey=import_public_key(f'keys/car_{UID}_pub.pem')
 
 	print( "Get all the transaction from the concessionaire address..")
-	address= ['B9UCJQA9AUNWWQCFKPHYPBXFCSZPKMQI9TWFN9G9BJTHBHZQDXFXTGTPICXFTYKGJKJR9TWLVMVZEVPJX']
+	test=import_file('seed_adress/address_concess_store.txt')
+	print(test)
+	address= [test]
 
 	## get all transaction done to the adress
 	transactions = api.find_transaction_objects(addresses=address)

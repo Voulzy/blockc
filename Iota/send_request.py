@@ -7,15 +7,21 @@ from rsa_signature import *
 
 
 
+def import_file(file):
+	with open(file,mode='rb') as file_r:
+        	content=file_r.read()
+        	return content
+
 
 
 def sign_message(message,private_key):
 	signature_base_64=sign(private_key,SHA256.new(message))
+	print(signature_base_64)
 	return TryteString.from_bytes(signature_base_64)
 
 def cast_message(value,private_key):
 	###data for hash function
-	data=(value+'tt').encode("utf-8")
+	data=(value).encode("utf-8")
 	##message to store in the tangle
 	message=TryteString.from_unicode(value)
 	signature=sign_message(data,private_key)
@@ -24,12 +30,12 @@ def cast_message(value,private_key):
 	return message
 
 
-def send_request(value,address,private_key,api):
+def send_request(value,address,private_key,api,UID):
 	message=cast_message(value,private_key)
 	tx = ProposedTransaction(
 	address=Address(address),
 	value = 10,
-	tag=Tag(b'AA'),
+	tag=Tag(UID),
 	message=message
 	)
 
@@ -40,10 +46,10 @@ def send_request(value,address,private_key,api):
 
 
 if __name__ == "__main__":
-	file="../python/privatekey.pem"
-	private_key=import_private_key(file)
-	seed='CW9EUQWTNS9VCGQAQIHXMMWVZCEBCGKMUHYXBNEIGPQYYKTVRLBFJLEZHGMWYSRJKT9XAWSVLUNZE9YAX'
+	UID=input("Quel est votre tag de voiture ?") 
+	private_key=import_private_key('keys/private_concess_request.pem')
+	seed=import_file('seed_adress/seed_concessionaire_request.txt')
 	api = Iota('https://nodes.devnet.iota.org:443', seed, testnet = True)
-	address='MRHDWPXVP9RVDBXNJRMJQQEREZTPAEUUDBPCBFQBLRUMQQI9DAUDNZERIWR9CPCAWBMRMJEWRPUVGRJE9'
-	send_request('conso?',address,private_key,api)
+	address=import_file(f'seed_adress/address_car_{UID}.txt')
+	send_request('conso?',address,private_key,api,UID)
 

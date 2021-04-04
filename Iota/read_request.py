@@ -23,7 +23,9 @@ def get_verify_IOTA(message,public_key):
 	err=1
 	print("Verification signature ...")
 	signature=get_signature(message)
+	print(signature)
 	data=message.decode().split('?')[0]+'?'
+	print(data)
 	data=data.encode("utf-8")
 	data=SHA256.new(data)
 	try : 
@@ -49,12 +51,12 @@ def cast_message(value,private_key):
 	return message
 
 
-def send_transaction(value,address,private_key,api):
+def send_transaction(value,address,private_key,api,UID):
 	message=cast_message(value,private_key)
 	tx = ProposedTransaction(
 	address=Address(address),
 	value = 10,
-	tag=Tag(b'FF'),
+	tag=Tag(UID),
 	message=message
 	)
 
@@ -71,6 +73,8 @@ def read_transaction(address,api,UID,publickey):
 	request={}
 	for transaction in transactions['transactions']:
 		if transaction.value < 0:
+			continue
+		if transaction.value==0:
 			continue
 
 		message = transaction.signature_message_fragment
@@ -119,7 +123,7 @@ if __name__ == "__main__":
 	api_respond=Iota('https://nodes.devnet.iota.org:443', seed, testnet = True)
 	for i in legitimate : 
 		message=i+'?'+"340"+'?'
-		send_transaction(message,address_concess,privatekey,api_respond)
+		send_transaction(message,address_concess,privatekey,api_respond,UID)
 
 		
 	

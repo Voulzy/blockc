@@ -24,6 +24,7 @@ if __name__ == "__main__":
 	
 	private_key=import_private_key(f'keys/car_{UID}_priv.pem')
 	seed=import_file(f'seed_adress/seed_car_{UID}.txt')
+	print(seed)
 	api = Iota('https://nodes.devnet.iota.org:443', seed, testnet = True)
 	address='B9UCJQA9AUNWWQCFKPHYPBXFCSZPKMQI9TWFN9G9BJTHBHZQDXFXTGTPICXFTYKGJKJR9TWLVMVZEVPJX'
 	data=input_data.encode("utf-8")
