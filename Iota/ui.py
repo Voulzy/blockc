@@ -26,12 +26,15 @@ class Frames(object):
 		self.button.pack()
 
 	def get_info(self):
-		self.response = read_transaction.get_dicts(showdb.get_uid(self.query.get()))
-		if self.response == "error":
+		uid = showdb.get_uid(self.query.get())
+		print(uid)
+		if uid == "error":
 			messagebox.showinfo("Erreur", "Code introuvable")
 		else:
+			self.response = read_transaction.get_dicts(uid)
+			print(self.response)
 			self.info_frame()
-
+			
 	def info_frame(self):
 		info = Toplevel()
 		info.title("Info")

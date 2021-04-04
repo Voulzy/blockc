@@ -2,7 +2,8 @@ import sqlite3
 
 data = [('VIN1','AA'),
 		('VIN2','BB'),
-		('VIN3','CC')]
+		('VIN3','CC'),
+		('VIN4','DD')]
 
 conn = sqlite3.connect("car2.db")
 c = conn.cursor()
