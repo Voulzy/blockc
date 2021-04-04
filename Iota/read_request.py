@@ -12,6 +12,11 @@ import time
 def get_signature(message):
 	return message.decode().split('?')[1]
 
+def import_file(file):
+	with open(file,mode='rb') as file_r:
+        	content=file_r.read()
+        	return content
+
 
 #### Verify if the signature is OK
 def get_verify_IOTA(message,public_key):
@@ -96,19 +101,21 @@ def get_legitimate_request(request,duration):
 	return legitimate
 
 if __name__ == "__main__":
-	file="../python/publickey.pem"
-	file_private="../python/privatekey.pem"
-	public_key=import_public_key(file)
+	
+	
+	public_key=import_public_key('keys/public_concess_request.pem')
 	api = Iota('https://nodes.devnet.iota.org:443', testnet = True)
-	address=['MRHDWPXVP9RVDBXNJRMJQQEREZTPAEUUDBPCBFQBLRUMQQI9DAUDNZERIWR9CPCAWBMRMJEWRPUVGRJE9']
-	UID='AA'
-	address_concess = 'XJWGTWXL9JBKRGXONOXCIFLALYGAHFQKKSPFADNMJLDOZYNDWCPVUWJCK9OYBUNYNWVHQDKOHVDZE9PTD'
+	UID=input("Quel est l'UID de la voiture [AA] [BB] [CC] [DD] ?")
+	
+	seed=import_file(f'seed_adress/seed_car_{UID}.txt')
+	address=[import_file(f'seed_adress/address_car_{UID}.txt')]
+	address_concess = 'B9UCJQA9AUNWWQCFKPHYPBXFCSZPKMQI9TWFN9G9BJTHBHZQDXFXTGTPICXFTYKGJKJR9TWLVMVZEVPJX'
 	### We get all the request
 	result=read_transaction(address,api,UID,public_key)
 	##we only keep the legitimate request, and we remove double
 	legitimate=list(set(get_legitimate_request(result,50000)))
-	privatekey=import_private_key(file_private)
-	seed='ESCIWUILOX9CCHPGMQUMDDGHFZZPFNYZCDYHMVYIDPOVSSHGWROCDIAVQNKPTOTCBPEIIQNUFXYSSEYUY'
+	privatekey=import_private_key(f'keys/car_{UID}_priv.pem')
+
 	api_respond=Iota('https://nodes.devnet.iota.org:443', seed, testnet = True)
 	for i in legitimate : 
 		message=i+'?'+"340"+'?'
