@@ -22,16 +22,21 @@ def get_signature(message):
 def get_value(message):
 	return message.decode().split('?')[1]
 
-#### Verify if the signature is OK
+#### Verify if the signature is OK. If ok, return 1, if not return 0
 def get_verify_IOTA(message,public_key):
+	err=1
 	print("Verification signature ...")
 	signature=get_signature(message)
 	data=message.decode().split('?')[0]+'?'+message.decode().split('?')[1]+'?'
 	data=data.encode("utf-8")
 	data=SHA256.new(data)
-	print(verify(public_key,data,signature))
-	print("Signature OK")
-	return 1
+	try : 
+		verify(public_key,data,signature)
+		print("Signature OK")
+	except : 
+		err= 0
+	finally:
+		return err
 
 
 

@@ -1,5 +1,8 @@
 from iota import Iota
 from iota import Tag 
+from iota import ProposedTransaction
+from iota import Address
+from iota import TryteString
 import numpy as np
 from rsa_signature import *
 from datetime import datetime
@@ -12,14 +15,19 @@ def get_signature(message):
 
 #### Verify if the signature is OK
 def get_verify_IOTA(message,public_key):
+	err=1
 	print("Verification signature ...")
 	signature=get_signature(message)
 	data=message.decode().split('?')[0]+'?'
 	data=data.encode("utf-8")
 	data=SHA256.new(data)
-	print(verify(public_key,data,signature))
-	print("Signature OK")
-	return 1
+	try : 
+		verify(public_key,data,signature)
+		print("Signature OK")
+	except : 
+		err= 0
+	finally:
+		return err
 
 def sign_message(message,private_key):
 	signature_base_64=sign(private_key,SHA256.new(message))
@@ -36,12 +44,12 @@ def cast_message(value,private_key):
 	return message
 
 
-def send_request(value,address,private_key):
+def send_transaction(value,address,private_key,api):
 	message=cast_message(value,private_key)
 	tx = ProposedTransaction(
 	address=Address(address),
 	value = 10,
-	tag=Tag(b'AA'),
+	tag=Tag(b'FF'),
 	message=message
 	)
 
@@ -70,32 +78,41 @@ def read_transaction(address,api,UID,publickey):
 			print('(None)')
 		else :
 			if Tag_t[0:2]==UID :
-				get_verify_IOTA(message,publickey)
-				request[date]=message.decode().split('?')[0]
+				if(get_verify_IOTA(message,publickey)):
+					request[date]=message.decode().split('?')[0]
+				else:
+					print("Bad signature")
 	return request
 
 
-def get_legitimate_request(request):
+def get_legitimate_request(request,duration):
 	legitimate=[]
 	for i in result :
 		date=datetime.fromtimestamp(i)
 		current_date=datetime.fromtimestamp(time.time())
 		delta=current_date-date
-		if delta.seconds<50000 : 
+		if delta.seconds<duration : 
 			legitimate.append(result[i])
 	return legitimate
 
 if __name__ == "__main__":
 	file="../python/publickey.pem"
+	file_private="../python/privatekey.pem"
 	public_key=import_public_key(file)
 	api = Iota('https://nodes.devnet.iota.org:443', testnet = True)
 	address=['MRHDWPXVP9RVDBXNJRMJQQEREZTPAEUUDBPCBFQBLRUMQQI9DAUDNZERIWR9CPCAWBMRMJEWRPUVGRJE9']
 	UID='AA'
+	address_concess = 'XJWGTWXL9JBKRGXONOXCIFLALYGAHFQKKSPFADNMJLDOZYNDWCPVUWJCK9OYBUNYNWVHQDKOHVDZE9PTD'
 	### We get all the request
 	result=read_transaction(address,api,UID,public_key)
 	##we only keep the legitimate request, and we remove double
-	legitimate=list(set(get_legitimate_request(result)))
-	
+	legitimate=list(set(get_legitimate_request(result,50000)))
+	privatekey=import_private_key(file_private)
+	seed='ESCIWUILOX9CCHPGMQUMDDGHFZZPFNYZCDYHMVYIDPOVSSHGWROCDIAVQNKPTOTCBPEIIQNUFXYSSEYUY'
+	api_respond=Iota('https://nodes.devnet.iota.org:443', seed, testnet = True)
+	for i in legitimate : 
+		message=i+'?'+"340"+'?'
+		send_transaction(message,address_concess,privatekey,api_respond)
 
 		
 	
