@@ -8,9 +8,9 @@ from rsa_signature import *
 seed = 'ESCIWUILOX9CCHPGMQUMDDGHFZZPFNYZCDYHMVYIDPOVSSHGWROCDIAVQNKPTOTCBPEIIQNUFXYSSEYUY'
 #connexion to the devnet, from the seed 
 api = Iota('https://nodes.devnet.iota.org:443', seed, testnet = True)
-
+file="../python/privatekey.pem"
 address = 'XJWGTWXL9JBKRGXONOXCIFLALYGAHFQKKSPFADNMJLDOZYNDWCPVUWJCK9OYBUNYNWVHQDKOHVDZE9PTD'
-private_key=import_private_key()
+private_key=import_private_key(file)
 
 input_data=input("Quel est votre data a envoyé ?")
 input_tag=input("Quel est votre tag de voiture ?") 

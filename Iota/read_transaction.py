@@ -45,7 +45,8 @@ def get_dicts(UID):
 	api = Iota('https://nodes.devnet.iota.org:443', testnet = True)
 
 	#Import public key for authentification
-	pub_jey=import_public_key()
+	file="../python/publickey.pem"
+	pub_jey=import_public_key(file)
 
 	print( "Get all the transaction from the concessionaire address..")
 	address= ['XJWGTWXL9JBKRGXONOXCIFLALYGAHFQKKSPFADNMJLDOZYNDWCPVUWJCK9OYBUNYNWVHQDKOHVDZE9PTD']
