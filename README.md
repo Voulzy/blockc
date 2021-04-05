@@ -3,6 +3,7 @@
 POC for a distributed immutable Car data registration  
 ## Pre requis  
 python x >=3.8  
+pip3 install -r requirements.txt
 pyota  
 numpy
 
