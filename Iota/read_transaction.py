@@ -93,9 +93,9 @@ def get_dicts(UID):
 					print('Code introuvable')
 	if find == 0 :
 		return "error"
-	response["km"] = km
-	response["conso"] = conso
-	response["usure"] = usure
+	response["km"] = dict(sorted(km.items()))
+	response["conso"] = dict(sorted(conso.items()))
+	response["usure"] = dict(sorted(usure.items()))
 	return response
 
 
