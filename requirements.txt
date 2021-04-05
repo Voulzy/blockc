@@ -1,0 +1,6 @@
+numpy==1.19.5
+pycrypto==2.6.1
+pycryptodome==3.10.1
+pycryptodomex==3.9.7
+pyOpenSSL==19.1.0
+PyOTA==2.1.0
