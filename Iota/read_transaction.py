@@ -58,7 +58,6 @@ def get_dicts(UID):
 
 	print( "Get all the transaction from the concessionaire address..")
 	test=import_file('seed_adress/address_concess_store.txt')
-	print(test)
 	address= [test]
 
 	## get all transaction done to the adress

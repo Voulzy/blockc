@@ -23,9 +23,8 @@ def get_verify_IOTA(message,public_key):
 	err=1
 	print("Verification signature ...")
 	signature=get_signature(message)
-	print(signature)
 	data=message.decode().split('?')[0]+'?'
-	print(data)
+	print("Valeur demander : "+data)
 	data=data.encode("utf-8")
 	data=SHA256.new(data)
 	try : 
@@ -52,6 +51,7 @@ def cast_message(value,private_key):
 
 
 def send_transaction(value,address,private_key,api,UID):
+	print("Envoie des reponse ...")
 	message=cast_message(value,private_key)
 	tx = ProposedTransaction(
 	address=Address(address),
@@ -61,13 +61,13 @@ def send_transaction(value,address,private_key,api,UID):
 	)
 
 	result = api.send_transfer(transfers=[tx] )
-	print('Bundle: ')
-	print(result['bundle'].tail_transaction.hash)
+	
 
 
 
 
 def read_transaction(address,api,UID,publickey):
+	print("We search for all the transactions that are ever been made to the car ...")
 	transactions = api.find_transaction_objects(addresses=address)
 	## We store all the request that are ever been made to our car
 	request={}
@@ -95,6 +95,7 @@ def read_transaction(address,api,UID,publickey):
 
 
 def get_legitimate_request(request,duration):
+	print("We select only those made before 24 hours")
 	legitimate=[]
 	for i in result :
 		date=datetime.fromtimestamp(i)
@@ -122,7 +123,7 @@ if __name__ == "__main__":
 
 	api_respond=Iota('https://nodes.devnet.iota.org:443', seed, testnet = True)
 	for i in legitimate : 
-		message=i+'?'+"340"+'?'
+		message=i+'?'+"10"+'?'
 		send_transaction(message,address_concess,privatekey,api_respond,UID)
 
 		

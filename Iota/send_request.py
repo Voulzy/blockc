@@ -16,7 +16,6 @@ def import_file(file):
 
 def sign_message(message,private_key):
 	signature_base_64=sign(private_key,SHA256.new(message))
-	print(signature_base_64)
 	return TryteString.from_bytes(signature_base_64)
 
 def cast_message(value,private_key):
@@ -46,10 +45,15 @@ def send_request(value,address,private_key,api,UID):
 
 
 if __name__ == "__main__":
-	UID=input("Quel est votre tag de voiture ?") 
+	UID=input("Quel est l'UID de la voiture [AA] [BB] [CC] [DD] ?")
+	information=input("Quel est l'information que vous souhaitez demander ?") 
+	information=information+'?'
+	print("Signature du message ...")
 	private_key=import_private_key('keys/private_concess_request.pem')
 	seed=import_file('seed_adress/seed_concessionaire_request.txt')
+	print("Connexion au devnet ....")
 	api = Iota('https://nodes.devnet.iota.org:443', seed, testnet = True)
 	address=import_file(f'seed_adress/address_car_{UID}.txt')
-	send_request('conso?',address,private_key,api,UID)
+	print("Envoi de la requete ...")
+	send_request(information,address,private_key,api,UID)
 
